@@ -33,6 +33,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public static function find(int $id)
+    {
+        return User::query()->find($id);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
