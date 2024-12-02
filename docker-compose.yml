@@ -9,8 +9,8 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: biolink_api
-            MYSQL_USER: root
-            MYSQL_PASSWORD: root
+            MYSQL_USER: biolink
+            MYSQL_PASSWORD: biolink
         volumes:
             - db_data:/var/lib/mysql
         networks:
