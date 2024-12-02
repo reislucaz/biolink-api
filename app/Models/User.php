@@ -18,9 +18,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name', 'email', 'password', 'type', 'birth_date', 'cpf', 'rg',
+        'nationality', 'gender', 'address', 'district', 'city', 'state',
+        'zip_code', 'phone',
     ];
 
     /**
@@ -44,5 +44,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function receptorMedicalInfo()
+    {
+        return $this->hasOne(ReceptorMedicalInfo::class);
+    }
+
+    public function donorMedicalInfo()
+    {
+        return $this->hasOne(DonorMedicalInfo::class);
     }
 }
