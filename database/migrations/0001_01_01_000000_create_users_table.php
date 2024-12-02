@@ -15,9 +15,19 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
+            $table->enum('type', ['RECEPTOR', 'DOADOR', 'ADMIN']);
+            $table->date('birth_date');
+            $table->string('cpf')->unique();
+            $table->string('rg')->nullable();
+            $table->string('nationality')->nullable();
+            $table->enum('gender', ['MASC', 'FEM']);
+            $table->string('address')->nullable();
+            $table->string('district')->nullable(); // Bairro
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip_code')->nullable(); // CEP
+            $table->string('phone')->nullable();
             $table->timestamps();
         });
 
