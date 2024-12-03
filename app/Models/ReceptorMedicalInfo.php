@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ReceptorMedicalInfo extends Model
 {
     use HasFactory;
+
+    protected $table = 'receptor_medical_info';
 
     protected $fillable = [
         'user_id', 'blood_type', 'rh_factor', 'health_problems',
@@ -19,7 +22,7 @@ class ReceptorMedicalInfo extends Model
         return ReceptorMedicalInfo::query()->create($array);
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

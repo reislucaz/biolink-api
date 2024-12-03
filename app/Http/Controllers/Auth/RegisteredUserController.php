@@ -8,7 +8,7 @@ use App\Models\ReceptorMedicalInfo;
 use App\Models\DonorMedicalInfo;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 
@@ -21,11 +21,9 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        // console log for debugging
-        error_log($request);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'type' => ['required', 'in:RECEPTOR,DOADOR,ADMIN'],
             'birth_date' => ['required', 'date'],
@@ -41,35 +39,36 @@ class RegisteredUserController extends Controller
             'phone' => ['nullable', 'string', 'max:15'],
         ]);
 
-        // Criação do usuário
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'type' => $request->type,
-            'birth_date' => $request->birth_date,
-            'cpf' => $request->cpf,
-            'rg' => $request->rg,
-            'nationality' => $request->nationality,
-            'gender' => $request->gender,
-            'address' => $request->address,
-            'district' => $request->district,
-            'city' => $request->city,
-            'state' => $request->state,
-            'zip_code' => $request->zip_code,
-            'phone' => $request->phone,
-        ]);
-
-        // Lógica adicional para tipos de usuário
-        if ($user->type === 'RECEPTOR') {
-            $request->validate([
-                'blood_type' => ['required', 'string', 'max:3'],
-                'rh_factor' => ['required', 'string', 'max:3'],
-                'health_problems' => ['nullable', 'string'],
-                'medical_history' => ['nullable', 'string'],
-                'transplant_history' => ['nullable', 'string'],
-                'required_organ' => ['required', 'string', 'max:100'],
+        return DB::transaction(function () use ($request) {
+            // Criação do usuário
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'type' => $request->type,
+                'birth_date' => $request->birth_date,
+                'cpf' => $request->cpf,
+                'rg' => $request->rg,
+                'nationality' => $request->nationality,
+                'gender' => $request->gender,
+                'address' => $request->address,
+                'district' => $request->district,
+                'city' => $request->city,
+                'state' => $request->state,
+                'zip_code' => $request->zip_code,
+                'phone' => $request->phone,
             ]);
+
+            // Lógica adicional para tipos de usuário
+            if ($user->type === 'RECEPTOR') {
+                $request->validate([
+                    'blood_type' => ['required', 'string', 'max:3'],
+                    'rh_factor' => ['required', 'string', 'max:3'],
+                    'health_problems' => ['nullable', 'string'],
+                    'medical_history' => ['nullable', 'string'],
+                    'transplant_history' => ['nullable', 'string'],
+                    'required_organ' => ['required', 'string', 'max:100'],
+                ]);
 
             ReceptorMedicalInfo::create([
                 'user_id' => $user->id,
@@ -93,23 +92,24 @@ class RegisteredUserController extends Controller
                 'family_history' => ['nullable', 'string'],
             ]);
 
-            DonorMedicalInfo::create([
-                'user_id' => $user->id,
-                'organs_to_donate' => json_encode($request->organs_to_donate),
-                'blood_type' => $request->blood_type,
-                'rh_factor' => $request->rh_factor,
-                'preexisting_conditions' => $request->preexisting_conditions,
-                'allergies' => $request->allergies,
-                'continuous_medication' => $request->continuous_medication,
-                'alcohol_consumer' => $request->alcohol_consumer,
-                'smoker' => $request->smoker,
-                'family_history' => $request->family_history,
-            ]);
-        }
+                DonorMedicalInfo::create([
+                    'user_id' => $user->id,
+                    'organs_to_donate' => json_encode($request->organs_to_donate),
+                    'blood_type' => $request->blood_type,
+                    'rh_factor' => $request->rh_factor,
+                    'preexisting_conditions' => $request->preexisting_conditions,
+                    'allergies' => $request->allergies,
+                    'continuous_medication' => $request->continuous_medication,
+                    'alcohol_consumer' => $request->alcohol_consumer,
+                    'smoker' => $request->smoker,
+                    'family_history' => $request->family_history,
+                ]);
+            }
 
-        return response()->json([
-            'message' => 'User registered successfully.',
-            'user' => $user,
-        ], 201);
+            return response()->json([
+                'message' => 'Usuário cadastrado com sucesso.',
+                'user' => $user,
+            ], 201);
+        });
     }
 }

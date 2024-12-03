@@ -10,6 +10,8 @@ class DonorMedicalInfo extends Model
 {
     use HasFactory;
 
+    protected $table = 'donor_medical_info';
+
     protected $fillable = [
         'user_id', 'organs_to_donate', 'blood_type', 'rh_factor',
         'preexisting_conditions', 'allergies', 'continuous_medication',
