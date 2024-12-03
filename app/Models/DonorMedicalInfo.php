@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DonorMedicalInfo extends Model
 {
@@ -15,7 +16,12 @@ class DonorMedicalInfo extends Model
         'alcohol_consumer', 'smoker', 'family_history',
     ];
 
-    public function user()
+    public static function create(array $array)
+    {
+        return DonorMedicalInfo::query()->create($array);
+    }
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

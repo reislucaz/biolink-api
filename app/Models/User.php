@@ -38,6 +38,11 @@ class User extends Authenticatable
         return User::query()->find($id);
     }
 
+    public static function create(array $array)
+    {
+        return User::query()->create($array);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

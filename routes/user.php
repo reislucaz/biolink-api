@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
-Route::middleware(['auth:sanctum'])->prefix('users')->group(function () {
+Route::prefix('users')->group(function () {
     // Listagem de usuários com paginação e filtros
     Route::get('/', [UserController::class, 'list'])->name('users.list');
 

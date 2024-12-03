@@ -14,6 +14,11 @@ class ReceptorMedicalInfo extends Model
         'medical_history', 'transplant_history', 'required_organ',
     ];
 
+    public static function create(array $array)
+    {
+        return ReceptorMedicalInfo::query()->create($array);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

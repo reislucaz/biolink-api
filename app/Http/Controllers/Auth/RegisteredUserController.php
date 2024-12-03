@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\ReceptorMedicalInfo;
 use App\Models\DonorMedicalInfo;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +21,8 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        // console log for debugging
+        error_log($request);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -105,9 +106,6 @@ class RegisteredUserController extends Controller
                 'family_history' => $request->family_history,
             ]);
         }
-
-        event(new Registered($user));
-        Auth::login($user);
 
         return response()->json([
             'message' => 'User registered successfully.',
