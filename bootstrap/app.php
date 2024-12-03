@@ -17,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (Throwable $exception) {
-            if ($exception instanceof ValidationException) {
+            if ($exception instanceof \Illuminate\Validation\ValidationException) {
                 return response()->json(['message' => $exception->getMessage()], 422);
             }
             if ($exception instanceof \Illuminate\Database\QueryException) {
