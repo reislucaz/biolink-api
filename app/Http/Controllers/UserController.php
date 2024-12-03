@@ -16,6 +16,7 @@ class UserController extends Controller
     public function list(Request $request): \Illuminate\Http\JsonResponse
     {
         $type = $request->input('type'); // Filtrar por tipo, se fornecido
+        $organ = $request->input('organ'); // Filtrar por órgão, se fornecido
         $per_page = $request->input('per_page', 10);
         $page = $request->input('page', 1);
 
@@ -23,6 +24,12 @@ class UserController extends Controller
 
         if ($type) {
             $query->where('type', $type);
+        }
+
+        if ($organ) {
+            $query->whereHas('donorMedicalInfo', function ($query) use ($organ) {
+                $query->where('organ', $organ);
+            });
         }
 
         $users = $query->paginate($per_page, ['*'], 'page', $page);
@@ -38,12 +45,23 @@ class UserController extends Controller
      */
     public function getById(int $id): \Illuminate\Http\JsonResponse
     {
-        $user = User::find($id);
+        $queryUser = User::query();
+
+        $user = $queryUser->find($id);
 
         if (!$user) {
             return response()->json([
                 'message' => 'User not found.',
             ], 404);
+        }
+
+        switch ($user->type) {
+            case 'DOADOR':
+                $user->load('donorMedicalInfo');
+                break;
+            case 'RECEPTOR':
+                $user->load('receptorMedicalInfo');
+                break;
         }
 
         return response()->json($user);
