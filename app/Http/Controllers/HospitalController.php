@@ -7,11 +7,15 @@ use Illuminate\Http\Request;
 
 class HospitalController extends Controller
 {
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index(Request $request): \Illuminate\Http\JsonResponse
     {
-        $hospitals = Hospital::all();
+        $perPage = $request->query('per_page', 10);
+
+        $hospitals = Hospital::query()->paginate($perPage);
+
         return response()->json($hospitals);
     }
+
 
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
