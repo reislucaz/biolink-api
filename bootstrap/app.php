@@ -12,6 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->use([\Illuminate\Session\Middleware\StartSession::class]);
+        $middleware->use([\App\Http\Middleware\CorsMiddleware::class]);
         $middleware->alias([
             'verified' => EnsureEmailIsVerified::class,
         ]);
