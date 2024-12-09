@@ -22,10 +22,12 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($exception instanceof \Illuminate\Validation\ValidationException) {
                 return response()->json(['message' => $exception->getMessage()], 422);
             }
+            
+            return response()->json(['message' => $exception->getMessage()], 500);
+
             if ($exception instanceof \Illuminate\Database\QueryException) {
                 return response()->json(['message' => "Erro de servidor. Comunique o administrador!"], 500);
             }
 
-            return response()->json(['message' => $exception->getMessage()], 500);
         });
     })->create();
