@@ -40,6 +40,13 @@ Este é o código do back-end do **Bio Link**, um aplicativo de gerenciamento de
    php artisan key:generate
    ```
 
+3. **Suba os containers da aplicação:**
+   Suba os containers da aplicação, como o banco de dados por exemplo, rodando o comando a seguir:
+
+   ```bash
+   docker compose up -d
+   ```
+
 5. **Execute as migrações:**
    Certifique-se de que o banco de dados está configurado corretamente e execute:
    ```bash
