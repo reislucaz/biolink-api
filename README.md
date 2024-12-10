@@ -77,3 +77,14 @@ Certifique-se de ter as seguintes ferramentas instaladas:
 - Extensões PHP: `pdo`, `mbstring`, `openssl`, `json`
 
 ---
+
+## Integrantes
+
+- Lucas Reis
+- Millena
+- Lídia
+- Jennifer
+- Letícia Reis
+- Diego Mesquita
+- Gustavo Antunes
+- Gustavo Bertonsin
